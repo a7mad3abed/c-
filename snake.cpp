@@ -2,7 +2,6 @@
 #include <vector>
 #include <thread>
 #include <random>
-#include <ctime>
 #define DELAY	150
 
 bool game_over = false;
@@ -51,7 +50,7 @@ void check()
 }
 
 
-void move()
+void snake_move()
 {
 
 
@@ -116,9 +115,9 @@ void move()
 void food()
 {
 	getmaxyx(stdscr, height, width);
-	std::srand(std::time(nullptr));
-	int x_food = std::rand()% width;
-	int y_food = std::rand()% height;
+	std::srand(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+	int x_food = std::rand()% (width-1);
+	int y_food = std::rand()% (height-1);
 	for(int i = 0; i < snake.size()-1; i++)
 	{
 		if(x_food == snake[i].x && y_food == snake[i].y)
@@ -156,8 +155,8 @@ int main()
 	{
 		if(new_food)
 			food();
-		draw();
 		check();
+		draw();
 		std::this_thread::sleep_for(std::chrono::milliseconds(DELAY));
 		switch(getch())
 		{
@@ -181,7 +180,7 @@ int main()
 				game_over = true;
 		}
 
-		move();
+		snake_move();
 
 	}
 	erase();
